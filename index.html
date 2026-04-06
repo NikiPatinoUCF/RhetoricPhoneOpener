@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<!-- saved from url=(0057)file:///C:/Users/Niki/Downloads/enc1102-opener%20(2).html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ENC 1102 — Rhetoric Lab</title>
+<link href="./index_files/css2" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --paper: #f5f0e8;
+    --red: #c0392b;
+    --gold: #d4a017;
+    --rust: #8b3a2a;
+    --cream: #faf7f0;
+    --gray: #6b6052;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; min-height: 100vh; animation: fadeIn 0.5s ease; }
+  .screen.active { display: flex; flex-direction: column; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── HEADER STRIP ── */
+  .header-strip {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 10px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .header-strip .course-tag { color: var(--gold); }
+
+  /* ── MAIN CONTENT AREA ── */
+  .main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 24px; text-align: center; }
+
+  /* ── TITLE CARD ── */
+  .big-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 14vw, 120px);
+    line-height: 0.9;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+    position: relative;
+  }
+  .big-title .accent { color: var(--red); }
+  .big-title .under {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: clamp(22px, 5vw, 44px);
+    color: var(--rust);
+    display: block;
+    margin-top: 8px;
+    letter-spacing: 0.01em;
+  }
+
+  .divider-rule {
+    width: 80px;
+    height: 3px;
+    background: var(--gold);
+    margin: 28px auto;
+  }
+
+  .subtitle {
+    font-size: clamp(14px, 3vw, 18px);
+    color: var(--gray);
+    font-weight: 300;
+    font-style: italic;
+    max-width: 480px;
+    line-height: 1.7;
+  }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-block;
+    margin-top: 36px;
+    padding: 14px 36px;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    text-decoration: none;
+  }
+  .btn:hover { background: var(--red); transform: translateY(-2px); }
+  .btn.secondary {
+    background: transparent;
+    color: var(--ink);
+    border: 2px solid var(--ink);
+    margin-left: 12px;
+  }
+  .btn.secondary:hover { background: var(--ink); color: var(--paper); }
+  .btn.gold-btn { background: var(--gold); color: var(--ink); }
+  .btn.gold-btn:hover { background: var(--rust); color: var(--paper); }
+
+  /* ── STEP INDICATOR ── */
+  .step-indicator {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--gray);
+    margin-bottom: 24px;
+    text-transform: uppercase;
+  }
+  .step-indicator span { color: var(--red); font-weight: 600; }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--cream);
+    border: 1px solid rgba(26,18,8,0.12);
+    border-left: 4px solid var(--gold);
+    padding: 28px 32px;
+    max-width: 620px;
+    width: 100%;
+    text-align: left;
+    margin: 12px auto;
+    box-shadow: 4px 4px 0 rgba(26,18,8,0.06);
+  }
+  .card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.08em;
+    color: var(--red);
+    margin-bottom: 10px;
+  }
+  .card p, .card li { font-size: 15px; line-height: 1.75; color: var(--ink); }
+  .card ul { padding-left: 20px; }
+  .card li { margin-bottom: 6px; }
+
+  /* ── PROMPT BOX ── */
+  .prompt-box {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 32px 36px;
+    max-width: 620px;
+    width: 100%;
+    margin: 16px auto;
+    position: relative;
+  }
+  .prompt-box::before {
+    content: '❝';
+    font-size: 64px;
+    color: var(--gold);
+    position: absolute;
+    top: -10px;
+    left: 16px;
+    line-height: 1;
+  }
+  .prompt-box p {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: clamp(18px, 4vw, 26px);
+    line-height: 1.5;
+    padding-top: 24px;
+    color: var(--paper);
+  }
+  .prompt-box .source-tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 16px;
+    display: block;
+  }
+
+  /* ── CHOICE GRID ── */
+  .choice-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    max-width: 620px;
+    width: 100%;
+    margin: 20px auto;
+  }
+  .choice-btn {
+    background: var(--cream);
+    border: 2px solid rgba(26,18,8,0.15);
+    padding: 18px 16px;
+    cursor: pointer;
+    font-family: 'Source Serif 4', serif;
+    font-size: 15px;
+    color: var(--ink);
+    text-align: left;
+    transition: all 0.2s;
+    line-height: 1.5;
+  }
+  .choice-btn:hover { border-color: var(--red); background: #fff; transform: translateY(-2px); box-shadow: 3px 3px 0 rgba(192,57,43,0.15); }
+  .choice-btn.selected { border-color: var(--gold); background: #fffbf0; box-shadow: 3px 3px 0 rgba(212,160,23,0.2); }
+  .choice-btn .label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--red);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  /* ── TIMER ── */
+  .timer-ring {
+    width: 120px;
+    height: 120px;
+    margin: 20px auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .timer-ring svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); }
+  .timer-ring circle { fill: none; stroke-width: 6; }
+  .timer-ring .track { stroke: rgba(26,18,8,0.1); }
+  .timer-ring .progress { stroke: var(--red); stroke-linecap: round; stroke-dasharray: 339.3; transition: stroke-dashoffset 1s linear; }
+  .timer-display {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 40px;
+    color: var(--ink);
+    z-index: 1;
+  }
+  .timer-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--gray);
+    text-transform: uppercase;
+    text-align: center;
+    margin-top: 4px;
+  }
+
+  /* ── REVEAL PANEL ── */
+  .reveal-panel {
+    background: linear-gradient(135deg, var(--rust) 0%, var(--red) 100%);
+    color: var(--paper);
+    padding: 32px;
+    max-width: 620px;
+    width: 100%;
+    margin: 16px auto;
+  }
+  .reveal-panel h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+    color: var(--gold);
+  }
+  .reveal-panel p { font-size: 15px; line-height: 1.8; }
+
+  /* ── VOCAB CHIPS ── */
+  .vocab-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    max-width: 620px;
+    width: 100%;
+    margin: 16px auto;
+  }
+  .chip {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+  }
+  .chip:hover, .chip.flipped { background: var(--gold); color: var(--ink); }
+  .chip .back-def {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: var(--paper);
+    padding: 10px 14px;
+    font-size: 12px;
+    width: 200px;
+    text-align: center;
+    line-height: 1.5;
+    z-index: 10;
+    letter-spacing: 0;
+    text-transform: none;
+    font-family: 'Source Serif 4', serif;
+  }
+  .chip:hover .back-def, .chip.flipped .back-def { display: block; }
+
+  /* ── NAV BUTTONS ROW ── */
+  .nav-row { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; padding: 16px; }
+
+  /* ── ANNOTATION EXERCISE ── */
+  .anno-text {
+    background: var(--cream);
+    border: 1px solid rgba(26,18,8,0.1);
+    padding: 28px 32px;
+    max-width: 620px;
+    width: 100%;
+    margin: 12px auto;
+    font-size: 16px;
+    line-height: 2;
+    position: relative;
+  }
+  .anno-text p { margin-bottom: 14px; }
+  .highlight {
+    background: rgba(212,160,23,0.3);
+    cursor: pointer;
+    padding: 1px 2px;
+    transition: background 0.2s;
+  }
+  .highlight:hover { background: rgba(192,57,43,0.25); }
+  .highlight.tagged { background: rgba(192,57,43,0.25); }
+
+  mark.ethos { background: rgba(212,160,23,0.4); }
+  mark.pathos { background: rgba(100,180,120,0.4); }
+  mark.logos { background: rgba(100,140,220,0.4); }
+
+  .legend {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 12px auto;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-dot { width: 14px; height: 14px; }
+  .legend-dot.e { background: rgba(212,160,23,0.6); }
+  .legend-dot.p { background: rgba(100,180,120,0.6); }
+  .legend-dot.l { background: rgba(100,140,220,0.6); }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--ink);
+    color: var(--paper);
+    padding: 12px 24px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 500px) {
+    .choice-grid { grid-template-columns: 1fr; }
+    .btn.secondary { margin-left: 0; margin-top: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════ SCREEN 0: TITLE ═══ -->
+<div class="screen active" id="s0">
+  <div class="header-strip">
+    <span class="course-tag">ENC 1102</span>
+    <span>Composition II — Analysis &amp; Rhetoric</span>
+    <span>Composition II</span>
+  </div>
+  <div class="main">
+    <div class="big-title">
+      WHAT IS<br><span class="accent">RHETORIC</span>
+      <span class="under">— and why should you care?</span>
+    </div>
+    <div class="divider-rule"></div>
+    <p class="subtitle">Today we train your brain to <em>read like a critic</em>. Grab your phone. You'll need it.</p>
+    <button class="btn" onclick="go(&#39;s1&#39;)">Begin ›</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ SCREEN 1: PHONE INTRO ═══ -->
+<div class="screen" id="s1">
+  <div class="header-strip">
+    <span class="course-tag">ENC 1102</span>
+    <span>Warm-Up Activity</span>
+    <span>Step <span id="step1">1</span> of 5</span>
+  </div>
+  <div class="main">
+    <div class="step-indicator">Activity <span>01</span> — The Scroll Test</div>
+    <div class="big-title" style="font-size: clamp(40px,10vw,80px);">OPEN<br><span class="accent">YOUR<br>PHONE</span></div>
+    <div class="divider-rule"></div>
+    <div class="card">
+      <h3>📱 Instructions (2 min)</h3>
+      <ul>
+        <li>Open any social media app, news app, or your email.</li>
+        <li>Find <strong>one message, post, or headline</strong> trying to convince you of something.</li>
+        <li>Screenshot it or keep it open — you'll reference it shortly.</li>
+      </ul>
+    </div>
+    <p class="subtitle" style="margin-top:10px;">We're not on our phones for fun. We're doing <em>fieldwork</em>.</p>
+    <div class="nav-row">
+      <button class="btn secondary" onclick="go(&#39;s0&#39;)">‹ Back</button>
+      <button class="btn" onclick="go(&#39;s2&#39;)">Got One ›</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ SCREEN 2: FIRST INSTINCT ═══ -->
+<div class="screen" id="s2">
+  <div class="header-strip">
+    <span class="course-tag">ENC 1102</span>
+    <span>Warm-Up Activity</span>
+    <span>Step 2 of 5</span>
+  </div>
+  <div class="main">
+    <div class="step-indicator">Activity <span>02</span> — First Instinct</div>
+    <div class="prompt-box">
+      <p>Looking at your post or headline — what was your <em>gut reaction</em> when you first saw it?</p>
+      <span class="source-tag">Think before you analyze.</span>
+    </div>
+    <div class="choice-grid" id="instinctGrid">
+      <button class="choice-btn" onclick="pick(this,&#39;instinctGrid&#39;)">
+        <span class="label">Reaction A</span>
+        I believed it immediately / agreed with it.
+      </button>
+      <button class="choice-btn" onclick="pick(this,&#39;instinctGrid&#39;)">
+        <span class="label">Reaction B</span>
+        I felt suspicious or skeptical right away.
+      </button>
+      <button class="choice-btn" onclick="pick(this,&#39;instinctGrid&#39;)">
+        <span class="label">Reaction C</span>
+        I felt an emotional pull — curious, angry, amused.
+      </button>
+      <button class="choice-btn" onclick="pick(this,&#39;instinctGrid&#39;)">
+        <span class="label">Reaction D</span>
+        I scrolled past it — barely noticed the persuasion.
+      </button>
+    </div>
+    <p class="subtitle" style="font-size:13px;"><em>That gut reaction? That's rhetoric working on you.</em></p>
+    <div class="nav-row">
+      <button class="btn secondary" onclick="go(&#39;s1&#39;)">‹ Back</button>
+      <button class="btn" onclick="go(&#39;s3&#39;)">Next ›</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ SCREEN 3: RHETORICAL VOCAB ═══ -->
+<div class="screen" id="s3">
+  <div class="header-strip">
+    <span class="course-tag">ENC 1102</span>
+    <span>Vocabulary Builder</span>
+    <span>Step 3 of 5</span>
+  </div>
+  <div class="main">
+    <div class="step-indicator">Activity <span>03</span> — The Toolkit</div>
+    <div class="big-title" style="font-size:clamp(36px,9vw,72px);">RHETORIC'S<br><span class="accent">BIG THREE</span></div>
+    <div class="divider-rule"></div>
+    <p class="subtitle">Tap each card to reveal its definition.</p>
+
+    <div class="vocab-row">
+      <div class="chip" onclick="this.classList.toggle(&#39;flipped&#39;)">
+        ETHOS
+        <div class="back-def">Credibility appeal — the author establishes trust or authority.</div>
+      </div>
+      <div class="chip" onclick="this.classList.toggle(&#39;flipped&#39;)">
+        PATHOS
+        <div class="back-def">Emotional appeal — the text targets your feelings to persuade.</div>
+      </div>
+      <div class="chip" onclick="this.classList.toggle(&#39;flipped&#39;)">
+        LOGOS
+        <div class="back-def">Logical appeal — evidence, data, and reason drive the argument.</div>
+      </div>
+      <div class="chip" onclick="this.classList.toggle(&#39;flipped&#39;)">
+        KAIROS
+        <div class="back-def">Timing — the text exploits a specific moment to be persuasive.</div>
+      </div>
+      <div class="chip" onclick="this.classList.toggle(&#39;flipped&#39;)">
+        AUDIENCE
+        <div class="back-def">Who the text is written FOR — shapes every rhetorical choice.</div>
+      </div>
+      <div class="chip" onclick="this.classList.toggle(&#39;flipped&#39;)">
+        PURPOSE
+        <div class="back-def">What the text is trying to DO — inform, persuade, entertain?</div>
+      </div>
+      <div class="chip" onclick="this.classList.toggle(&#39;flipped&#39;)">
+        CONTEXT
+        <div class="back-def">The situation surrounding the text — cultural, historical, social.</div>
+      </div>
+      <div class="chip" onclick="this.classList.toggle(&#39;flipped&#39;)">
+        EXIGENCE
+        <div class="back-def">The urgency or problem that called the text into being.</div>
+      </div>
+    </div>
+
+    <div class="card" style="max-width:620px; margin-top: 20px;">
+      <h3>🔎 Now look at your post again</h3>
+      <p>Can you spot <strong>at least one</strong> of these at work? Hold that thought — next step, we'll look at a real text together.</p>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn secondary" onclick="go(&#39;s2&#39;)">‹ Back</button>
+      <button class="btn" onclick="go(&#39;s4&#39;)">Try It ›</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ SCREEN 4: TIMED CLOSE READ ═══ -->
+<div class="screen" id="s4">
+  <div class="header-strip">
+    <span class="course-tag">ENC 1102</span>
+    <span>Close Reading Sprint</span>
+    <span>Step 4 of 5</span>
+  </div>
+  <div class="main">
+    <div class="step-indicator">Activity <span>04</span> — Timed Analysis</div>
+    <p class="subtitle" style="margin-bottom:10px;">Read the passage below. You have <strong>3 minutes</strong> to mentally identify: <em>Who is the audience? What appeals are being used? What is the exigence?</em></p>
+
+    <div class="timer-ring" id="timerRing">
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle class="track" cx="60" cy="60" r="54"></circle>
+        <circle class="progress" id="timerArc" cx="60" cy="60" r="54" stroke-dashoffset="0"></circle>
+      </svg>
+      <div class="timer-display" id="timerDisplay">3:00</div>
+    </div>
+    <div class="timer-label" id="timerLabel">TAP TO START</div>
+    <button class="btn gold-btn" id="timerBtn" onclick="startTimer()" style="margin-top:0; margin-bottom:16px;">▶ Start Timer</button>
+
+    <div class="anno-text">
+      <p>"<mark class="ethos">As a physician who has treated thousands of patients</mark>, I can tell you with certainty: <mark class="logos">the data from our 10-year longitudinal study</mark> shows that people who skip breakfast are <mark class="logos">40% more likely to experience cognitive decline before age 60</mark>. <mark class="pathos">Think about your parents. Think about yourself in thirty years.</mark> This isn't just a dietary recommendation — it is a call to protect the people you love. <mark class="kairos">In a world where we are busier than ever</mark>, breakfast is the one simple act standing between you and a preventable future."</p>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot e"></div> ETHOS</div>
+      <div class="legend-item"><div class="legend-dot p"></div> PATHOS</div>
+      <div class="legend-item"><div class="legend-dot l"></div> LOGOS</div>
+      <div class="legend-item" style="font-size:11px; color: var(--gray);">+ Kairos (timing)</div>
+    </div>
+
+    <div class="card" style="margin-top:10px;">
+      <h3>💬 Discussion Prompt</h3>
+      <p>Turn to a neighbor: Which appeal do you think is the <em>most</em> effective here — and why? Does any part of this feel manipulative? How would you analyze this differently if it appeared as a social media ad vs. a medical journal?</p>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn secondary" onclick="go(&#39;s3&#39;)">‹ Back</button>
+      <button class="btn" onclick="go(&#39;s5&#39;)">Wrap Up ›</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ SCREEN 5: BIG TAKEAWAY ═══ -->
+<div class="screen" id="s5">
+  <div class="header-strip">
+    <span class="course-tag">ENC 1102</span>
+    <span>The Takeaway</span>
+    <span>Step 5 of 5</span>
+  </div>
+  <div class="main">
+    <div class="step-indicator">Activity <span>05</span> — So What?</div>
+    <div class="big-title" style="font-size:clamp(40px,10vw,80px);">EVERY<br>TEXT IS AN<br><span class="accent">ARGUMENT</span></div>
+    <div class="divider-rule"></div>
+
+    <div class="reveal-panel">
+      <h3>What Critical Analysis Does</h3>
+      <p>Analysis writing doesn't just ask <em>"what does the text say?"</em> It asks <strong>how</strong> and <strong>why</strong> — how is the text constructed to persuade, and why does that construction work (or fail) on a particular audience in a particular moment?</p>
+    </div>
+
+    <div class="card" style="margin-top: 16px;">
+      <h3>For Your Post (Exit Ticket)</h3>
+      <ul>
+        <li>What is the <strong>exigence</strong> — why was this made <em>now</em>?</li>
+        <li>Who is the <strong>intended audience</strong>?</li>
+        <li>Identify <strong>one rhetorical appeal</strong> (ethos/pathos/logos).</li>
+        <li>Is there anything the text <strong>leaves out</strong> or glosses over?</li>
+      </ul>
+    </div>
+
+    <div class="card" style="border-left-color: var(--red);">
+      <h3>Coming Up in ENC 1102</h3>
+      <p>You'll apply these tools to longer, more complex texts — academic articles, literary essays, even visual rhetoric. The goal: become a reader who <em>can't be fooled</em> and a writer who knows <em>exactly</em> what they're doing.</p>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn secondary" onclick="go(&#39;s4&#39;)">‹ Back</button>
+      <button class="btn" onclick="go(&#39;s0&#39;)">↺ Restart</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  function go(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function pick(el, gridId) {
+    document.querySelectorAll(`#${gridId} .choice-btn`).forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    showToast('Response noted ✓');
+  }
+
+  // ── TIMER ──
+  let timerInterval = null;
+  let totalSeconds = 180;
+  let remaining = 180;
+  const circumference = 339.3;
+
+  function startTimer() {
+    if (timerInterval) return;
+    document.getElementById('timerBtn').style.display = 'none';
+    document.getElementById('timerLabel').textContent = 'TIME REMAINING';
+    timerInterval = setInterval(() => {
+      remaining--;
+      const mins = Math.floor(remaining / 60);
+      const secs = remaining % 60;
+      document.getElementById('timerDisplay').textContent = `${mins}:${secs.toString().padStart(2,'0')}`;
+      const offset = circumference * (1 - remaining / totalSeconds);
+      document.getElementById('timerArc').style.strokeDashoffset = offset;
+      if (remaining <= 0) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+        document.getElementById('timerDisplay').textContent = 'DONE';
+        document.getElementById('timerLabel').textContent = 'PEN DOWN — DISCUSS';
+        document.getElementById('timerArc').style.stroke = '#d4a017';
+        showToast('Time! Begin discussion ›');
+      }
+    }, 1000);
+  }
+
+  // ── TOAST ──
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+</script>
+
+
+</body></html>
